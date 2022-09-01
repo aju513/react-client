@@ -1,67 +1,76 @@
-import axios from "axios";
 import React, { useState } from "react";
-import InputField from "./InputField";
-axios.withCredentials = true;
-const Form = ({ currentUser }) => {
-  const [state, setState] = useState(currentUser);
+import Data from "./Data";
+import datajson from "./datajson.json";
+import Fields from "./Fields";
+
+const Form = () => {
+  const [state, setState] = useState(datajson);
   const [error, setError] = useState({ err: "", name: "" });
   const validate = (e) => {
     e.preventDefault();
+    console.log(error);
     state.forEach((element) => {
-      if (element.value.length === 0) {
-        const vari = ` ${element.name} is empty`;
-        setError({ err: vari, name: element.name });
-      } else if (element.value.length < 4 && element.type !== "checkbox") {
-        const vari = `${element.name} length is less than 4`;
-        console.log(element.name);
+      if (element.defaultValue.length === 0) {
+        const vari = ` ${element.fieldName} is empty`;
+        setError({ err: vari, name: element.fieldName });
+      } else if (
+        element.defaultValue.length < 4 &&
+        element.inputType !== "number"
+      ) {
+        const vari = `${element.fieldName} length is less than 4`;
+        console.log(element.fieldName);
         setError({
           err: vari,
-          name: element.name,
+          name: element.fieldName,
         });
       }
     });
   };
-  const handleChange = (data, type) => {
+
+  const handleOnChange = (data, fieldName) => {
     var obj = state;
-    //This will update the new value to the state locally
-    obj.forEach((element) => {
-      if (element.name === type) {
-        element.value = data;
-        console.log(obj[type]);
+    obj.forEach((element, index) => {
+      if (element.fieldName === fieldName) {
+        element.defaultValue = data;
       }
     });
     setState(obj);
   };
+  const submit = (e) => {
+    e.preventDefault();
+    validate(e);
+    setState((el) => [...el]);
+  };
+
   return (
-    <>
+    <div>
       <form
-        onSubmit={(e) => {
-          validate(e);
-        }}
+        onSubmit={submit}
         style={{
           display: "flex",
           flexDirection: "column",
-          width: "20%",
-          margin: "1.2em",
-          border: "solid black ",
-          borderRadius: "4px",
+          margin: "2em",
+          width: "40%",
         }}
       >
-        {state.map((e) => (
-          <InputField
-            type={e.type}
-            value={e.value}
-            name={e.name}
+        {state.map((element) => (
+          <Fields
             setError={setError}
-            handleChange={handleChange}
-            label={e.name}
-            setState={setState}
-            error={error.name === e.name && error}
+            inputType={element.inputType}
+            fieldName={element.fieldName}
+            defaultValue={element.defaultValue}
+            options={element.options}
+            handleOnChange={handleOnChange}
+            min={element.min}
+            error={error.name === element.fieldName && error}
+            max={element.max}
           />
         ))}
-        <InputField type="submit" value="submit" />
+
+        <input type="submit" />
       </form>
-    </>
+      <Data state={state} />
+    </div>
   );
 };
 
