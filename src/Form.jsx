@@ -1,51 +1,44 @@
 import React, { useState } from "react";
 import Data from "./Data";
-import datajson from "./datajson.json";
+
 import Fields from "./Fields";
 
-const Form = () => {
-  const [state, setState] = useState(datajson);
+const Form = ({ datajson }) => {
+  const [state, setState] = useState({});
   const [error, setError] = useState({ err: "", name: "" });
   const validate = (e) => {
     e.preventDefault();
     console.log(error);
-    state.forEach((element) => {
-      if (element.defaultValue.length === 0) {
-        const vari = ` ${element.fieldName} is empty`;
-        setError({ err: vari, name: element.fieldName });
-      } else if (
-        element.defaultValue.length < 4 &&
-        element.inputType !== "number"
-      ) {
-        const vari = `${element.fieldName} length is less than 4`;
-        console.log(element.fieldName);
+    for (const [key, value] of Object.entries(state)) {
+      console.log(key, value);
+      if (key !== "number" && value.length === 0) {
+        const vari = ` ${key} is empty`;
+        setError({ err: vari, name: key });
+      } else if (key !== "number" && value.length < 4) {
+        const vari = `${key} length is less than 4`;
         setError({
           err: vari,
-          name: element.fieldName,
+          name: key,
+        });
+      }
+    }
+  };
+
+  const handleOnChange = (data, fieldName) => {
+    datajson.forEach((element, index) => {
+      if (element.fieldName === fieldName) {
+        setState((obj) => {
+          return { ...obj, [element.fieldName]: data };
         });
       }
     });
   };
-
-  const handleOnChange = (data, fieldName) => {
-    var obj = state;
-    obj.forEach((element, index) => {
-      if (element.fieldName === fieldName) {
-        element.defaultValue = data;
-      }
-    });
-    setState(obj);
-  };
-  const submit = (e) => {
-    e.preventDefault();
-    validate(e);
-    setState((el) => [...el]);
-  };
+  console.log(state);
 
   return (
     <div>
       <form
-        onSubmit={submit}
+        onSubmit={validate}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -53,7 +46,7 @@ const Form = () => {
           width: "40%",
         }}
       >
-        {state.map((element) => (
+        {datajson.map((element) => (
           <Fields
             setError={setError}
             inputType={element.inputType}
@@ -69,7 +62,6 @@ const Form = () => {
 
         <input type="submit" />
       </form>
-      <Data state={state} />
     </div>
   );
 };
