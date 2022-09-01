@@ -1,18 +1,39 @@
 [
   {
-    "username": "user1",
-    "data": [
-      { "name": "firstname", "value": "12dfd3", "type": "text" },
-      { "name": "lastname", "value": "abdfdc", "type": "password" },
-      { "name": "telephone", "value": "", "type": "number" }
-    ]
+    "fieldName": "name",
+    "inputType": "text",
+    "label": "Name",
+    "defaultValue": "something"
   },
   {
-    "username": "user2",
-    "data": [
-      { "name": "firstname", "value": "abdfdf d", "type": "text" },
-      { "name": "lastname", "value": "", "type": "text" },
-      { "name": "telephone", "value": "", "type": "number" }
-    ]
+    "fieldName": "age",
+    "inputType": "number",
+    "label": "Age",
+    "defaultValue": "40"
+  },
+  {
+    "fieldName": "Slider",
+    "inputType": "range",
+    "label": "Slider",
+    "defaultValue": 10,
+    "min": 0,
+    "max": 100
+  },
+  {
+    "fieldName": "Rank",
+    "inputType": "select",
+    "label": "Rank",
+    "options": [
+      { "value": "first", "label": "first" },
+      { "value": "second", "label": "second" },
+      { "value": "third", "label": "third" }
+    ],
+    "defaultValue": "second"
+  },
+  {
+    "fieldName": "Password",
+    "inputType": "password",
+    "label": "password",
+    "defaultValue": "something"
   }
 ]
